@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'game_logic.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -8,8 +10,53 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _State extends State<HomeScreen> {
+  String activePlayer = 'X';
+  bool gameOver = false;
+  int turn = 0;
+  String result = "xxxxxxxxxxxx";
+  Game game = Game();
+  bool isSwitched = false;
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      backgroundColor: Colors.black87,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // the auto player switch
+            SwitchListTile.adaptive(
+              title: const Text('Auto player'),
+              value: isSwitched,
+              onChanged: (newValue) {
+                setState(() {
+                  isSwitched = newValue;
+                });
+              },
+            ),
+            //the turn
+            Text(
+              "It's $activePlayer turn".toUpperCase(),
+              style: TextStyle(fontSize: 40),
+            ),
+            //the result
+            Text(result, style: TextStyle(fontSize: 28)),
+            //repeat the game
+            ElevatedButton.icon(
+              icon: Icon(Icons.repeat),
+              onPressed: () {
+                setState(() {
+                  activePlayer = 'X';
+                  gameOver = false;
+                  turn = 0;
+                  result = "";
+                });
+              },
+              label: Text("repeat the game"),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
