@@ -41,10 +41,49 @@ class _State extends State<HomeScreen> {
                 },
               ),
             ),
-            //the turn
+            //the turn ( X or O)
             Text(
               "It's $activePlayer turn".toUpperCase(),
               style: TextStyle(fontSize: 40),
+            ),
+            //the board grid
+            Expanded(
+              child: GridView.count(
+                padding: EdgeInsets.all(16),
+                crossAxisCount: 3,
+                mainAxisSpacing: 8.0,
+                crossAxisSpacing: 8.0,
+                childAspectRatio: 1.0,
+                children: List.generate(
+                  //generates 9 grids
+                  9,
+                  (index) => InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: gameOver
+                        ? null
+                        : () => _onTap(
+                            index,
+                          ), //if the game is over, the grid is not clickable
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 34, 40, 95),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+
+                      child: Center(
+                        child: Text(
+                          "X",
+                          style: TextStyle(
+                            fontSize: 50,
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
             //the result
             Text(result, style: TextStyle(fontSize: 28)),
@@ -65,5 +104,10 @@ class _State extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  //handles the grid tap
+  void _onTap(int index) {
+    game.playGame(index, activePlayer);
   }
 }
