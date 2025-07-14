@@ -25,14 +25,21 @@ class _State extends State<HomeScreen> {
         child: Column(
           children: [
             // the auto player switch
-            SwitchListTile.adaptive(
-              title: const Text('Auto player'),
-              value: isSwitched,
-              onChanged: (newValue) {
-                setState(() {
-                  isSwitched = newValue;
-                });
-              },
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 25, 43, 57),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: SwitchListTile.adaptive(
+                title: const Text('Auto player'),
+                value: isSwitched,
+                onChanged: (newValue) {
+                  setState(() {
+                    isSwitched = newValue;
+                  });
+                },
+              ),
             ),
             //the turn
             Text(
