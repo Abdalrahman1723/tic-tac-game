@@ -97,26 +97,28 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
             ),
             SizedBox(height: 20),
             //the turn ( X or O)
-            Text.rich(
-              style: TextStyle(fontSize: 40),
-              TextSpan(
-                style: TextStyle(fontSize: 40),
-                children: [
-                  TextSpan(text: "IT'S "),
-                  TextSpan(
-                    text: activePlayer == "X" ? "X" : "O",
-                    style: TextStyle(
-                      color: activePlayer == "X"
-                          ? Colors.blueAccent
-                          : Colors.redAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 50,
+            gameOver || turns == 9
+                ? Text("Start again", style: TextStyle(fontSize: 40))
+                : Text.rich(
+                    style: TextStyle(fontSize: 40),
+                    TextSpan(
+                      style: TextStyle(fontSize: 40),
+                      children: [
+                        TextSpan(text: "IT'S "),
+                        TextSpan(
+                          text: activePlayer == "X" ? "X" : "O",
+                          style: TextStyle(
+                            color: activePlayer == "X"
+                                ? Colors.blueAccent
+                                : Colors.redAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 50,
+                          ),
+                        ),
+                        TextSpan(text: " TURN"),
+                      ],
                     ),
                   ),
-                  TextSpan(text: " TURN"),
-                ],
-              ),
-            ),
             //the board grid
             Expanded(
               child: AnimatedBuilder(
@@ -176,6 +178,7 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
             ),
             //the result
             Text(result, style: TextStyle(fontSize: 28)),
+            SizedBox(height: 15),
             //repeat the game
             ElevatedButton.icon(
               icon: Icon(Icons.repeat),
@@ -204,7 +207,7 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
       game.playGame(index, activePlayer);
       _updateState();
 
-      if (isSwitched && !gameOver) {
+      if (isSwitched && !gameOver && turns != 9) {
         await Future.delayed(Duration(milliseconds: 1200));
         game.autoPlay(activePlayer);
         _updateState();
