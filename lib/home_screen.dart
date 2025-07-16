@@ -71,6 +71,7 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
   String result = "";
   Game game = Game();
   bool isSwitched = false;
+  bool boardLocked = false; // Add this flag
 
   @override
   Widget build(BuildContext context) {
@@ -191,6 +192,7 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
                   gameOver = false;
                   turns = 0;
                   result = "";
+                  boardLocked = false; // Reset on repeat
                 });
               },
               label: Text("repeat the game"),
@@ -203,15 +205,26 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
 
   //handles the grid tap
   void _onTap(int index) async {
+    // Prevent taps when board is locked (auto player is thinking)
+    if (boardLocked) {
+      _triggerForbiddenAction();
+      return;
+    }
     if ((Player.playerX.isEmpty || !Player.playerX.contains(index)) &&
         (Player.playerO.isEmpty || !Player.playerO.contains(index))) {
       game.playGame(index, activePlayer);
       _updateState();
-
+      //the auto player
       if (isSwitched && !gameOver && turns != 9) {
-        await Future.delayed(Duration(milliseconds: 1200));
+        setState(() {
+          boardLocked = true;
+        });
+        await Future.delayed(Duration(milliseconds: 1000));
         game.autoPlay(activePlayer);
         _updateState();
+        setState(() {
+          boardLocked = false;
+        });
       }
     } else {
       _triggerForbiddenAction();
