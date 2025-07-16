@@ -9,7 +9,61 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _State();
 }
 
-class _State extends State<HomeScreen> {
+class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  //the animation effect
+  late AnimationController _controller;
+  late Animation<double> _shakeAnimation;
+  late Animation<Color?> _colorAnimation;
+  bool _isForbidden = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    // Shake animation: moves the widget left and right
+    _shakeAnimation = Tween<double>(
+      begin: 0,
+      end: 10,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticIn));
+
+    // Color animation: transitions to red and back
+    _colorAnimation = ColorTween(begin: Colors.blue, end: Colors.red).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
+      ),
+    );
+
+    // Reset the animation after completion
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _controller.reverse().then((_) {
+          setState(() {
+            _isForbidden = false;
+          });
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _triggerForbiddenAction() {
+    setState(() {
+      _isForbidden = true;
+    });
+    _controller.forward();
+  }
+
+  //-------------------
   String activePlayer = 'X';
   bool gameOver = false;
   int turn = 0;
@@ -65,41 +119,49 @@ class _State extends State<HomeScreen> {
             ),
             //the board grid
             Expanded(
-              child: GridView.count(
-                padding: EdgeInsets.all(16),
-                crossAxisCount: 3,
-                mainAxisSpacing: 8.0,
-                crossAxisSpacing: 8.0,
-                childAspectRatio: 1.0,
-                children: List.generate(
-                  //generates 9 grids
-                  9,
-                  (index) => InkWell(
-                    borderRadius: BorderRadius.circular(16),
-                    onTap: gameOver
-                        ? null
-                        : () => _onTap(
-                            index,
-                          ), //if the game is over, the grid is not clickable
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 34, 40, 95),
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, child) => Transform.translate(
+                  offset: Offset(_shakeAnimation.value, 0),
+                  child: GridView.count(
+                    padding: EdgeInsets.all(16),
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 8.0,
+                    crossAxisSpacing: 8.0,
+                    childAspectRatio: 1.0,
+                    children: List.generate(
+                      //generates 9 grids
+                      9,
+                      (index) => InkWell(
                         borderRadius: BorderRadius.circular(16),
-                      ),
+                        onTap: gameOver
+                            ? null
+                            : () => _onTap(
+                                index,
+                              ), //if the game is over, the grid is not clickable
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: _isForbidden
+                                ? _colorAnimation.value
+                                : const Color.fromARGB(255, 34, 40, 95),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
 
-                      child: Center(
-                        child: Text(
-                          Player.playerX.contains(index)
-                              ? "X"
-                              : Player.playerO.contains(index)
-                              ? "O"
-                              : "",
-                          style: TextStyle(
-                            fontSize: 50,
-                            color: Player.playerX.contains(index)
-                                ? Colors.blueAccent
-                                : Colors.redAccent,
-                            fontWeight: FontWeight.bold,
+                          child: Center(
+                            child: Text(
+                              Player.playerX.contains(index)
+                                  ? "X"
+                                  : Player.playerO.contains(index)
+                                  ? "O"
+                                  : "",
+                              style: TextStyle(
+                                fontSize: 50,
+                                color: Player.playerX.contains(index)
+                                    ? Colors.blueAccent
+                                    : Colors.redAccent,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -137,6 +199,8 @@ class _State extends State<HomeScreen> {
         (Player.playerO.isEmpty || !Player.playerO.contains(index))) {
       game.playGame(index, activePlayer);
       _updateState();
+    } else {
+      _triggerForbiddenAction();
     }
   }
 
