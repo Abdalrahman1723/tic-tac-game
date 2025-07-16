@@ -70,9 +70,9 @@ To run this project locally:
 ## Screenshots
 
 <!-- Add screenshots of your app here -->
-![Game Board](screenshots/main.png)
-![Winner Dialog](screenshots/players.png)
-![draw Dialog](screenshots/auto.png)
+![Game Board](screenshots/main.jpg)
+![Winner Dialog](screenshots/players.jpg)
+![draw Dialog](screenshots/auto.jpg)
 
 ## Contributing
 
