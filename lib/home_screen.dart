@@ -13,7 +13,7 @@ class _State extends State<HomeScreen> {
   String activePlayer = 'X';
   bool gameOver = false;
   int turn = 0;
-  String result = "xxxxxxxxxxxx";
+  String result = "xxxxxxresultxxxxxx";
   Game game = Game();
   bool isSwitched = false;
 
@@ -32,7 +32,7 @@ class _State extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: SwitchListTile.adaptive(
-                title: const Text('Auto player'),
+                title: Text(!isSwitched ? 'Auto player' : "Two players"),
                 value: isSwitched,
                 onChanged: (newValue) {
                   setState(() {
@@ -41,10 +41,27 @@ class _State extends State<HomeScreen> {
                 },
               ),
             ),
+            SizedBox(height: 20),
             //the turn ( X or O)
-            Text(
-              "It's $activePlayer turn".toUpperCase(),
+            Text.rich(
               style: TextStyle(fontSize: 40),
+              TextSpan(
+                style: TextStyle(fontSize: 40),
+                children: [
+                  TextSpan(text: "IT'S "),
+                  TextSpan(
+                    text: activePlayer == "X" ? "X" : "O",
+                    style: TextStyle(
+                      color: activePlayer == "X"
+                          ? Colors.blueAccent
+                          : Colors.redAccent,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 50,
+                    ),
+                  ),
+                  TextSpan(text: " TURN"),
+                ],
+              ),
             ),
             //the board grid
             Expanded(
@@ -72,10 +89,16 @@ class _State extends State<HomeScreen> {
 
                       child: Center(
                         child: Text(
-                          "X",
+                          Player.playerX.contains(index)
+                              ? "X"
+                              : Player.playerO.contains(index)
+                              ? "O"
+                              : "",
                           style: TextStyle(
                             fontSize: 50,
-                            color: Colors.blueAccent,
+                            color: Player.playerX.contains(index)
+                                ? Colors.blueAccent
+                                : Colors.redAccent,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -92,6 +115,8 @@ class _State extends State<HomeScreen> {
               icon: Icon(Icons.repeat),
               onPressed: () {
                 setState(() {
+                  Player.playerX = [];
+                  Player.playerO = [];
                   activePlayer = 'X';
                   gameOver = false;
                   turn = 0;
@@ -107,7 +132,17 @@ class _State extends State<HomeScreen> {
   }
 
   //handles the grid tap
-  void _onTap(int index) {
-    game.playGame(index, activePlayer);
+  void _onTap(int index) async {
+    if ((Player.playerX.isEmpty || !Player.playerX.contains(index)) &&
+        (Player.playerO.isEmpty || !Player.playerO.contains(index))) {
+      game.playGame(index, activePlayer);
+      _updateState();
+    }
+  }
+
+  void _updateState() {
+    setState(() {
+      activePlayer = (activePlayer == "X") ? "O" : "X";
+    });
   }
 }
