@@ -69,10 +69,11 @@ To run this project locally:
 
 ## Screenshots
 
-<!-- Add screenshots of your app here -->
-![Game Board](screenshots/main.jpg)
-![Winner Dialog](screenshots/players.jpg)
-![draw Dialog](screenshots/auto.jpg)
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+  <img src="screenshots/main.jpg" alt="Game Board" style="width: 300px; max-width: 100%; height: auto;"/>
+  <img src="screenshots/players.jpg" alt="Winner Dialog" style="width: 300px; max-width: 100%; height: auto;"/>
+  <img src="screenshots/auto.jpg" alt="Draw Dialog" style="width: 300px; max-width: 100%; height: auto;"/>
+</div>
 
 ## Contributing
 
