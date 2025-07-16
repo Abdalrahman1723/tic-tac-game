@@ -19,8 +19,8 @@ A simple, cross-platform Tic Tac Toe game built with Flutter.
 ## Features
 
 - Play against another player on the same device
+- Play the the smart auto player
 - Simple and intuitive user interface
-- Responsive design for mobile and desktop
 - Game reset functionality
 - Highlights the winner or declares a draw
 
@@ -31,7 +31,7 @@ To run this project locally:
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/yourusername/tic_tac.git
+   git clone https://github.com/Abdalrahman1723/tic-tac-game
    cd tic_tac
    ```
 
@@ -61,6 +61,7 @@ To run this project locally:
 
 - The game board consists of a 3x3 grid.
 - Two players take turns: Player 1 (X) and Player 2 (O).
+- You can switch the auto player button on
 - Tap an empty cell to place your mark.
 - The first player to align three marks horizontally, vertically, or diagonally wins.
 - If all cells are filled and no player has three in a row, the game ends in a draw.
@@ -69,10 +70,9 @@ To run this project locally:
 ## Screenshots
 
 <!-- Add screenshots of your app here -->
-<!--
-![Game Board](screenshots/game_board.png)
-![Winner Dialog](screenshots/winner_dialog.png)
--->
+![Game Board](screenshots/main.png)
+![Winner Dialog](screenshots/players.png)
+![draw Dialog](screenshots/auto.png)
 
 ## Contributing
 
