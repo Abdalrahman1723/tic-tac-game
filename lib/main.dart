@@ -1,7 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tic_tac/home_screen.dart';
+import 'package:tic_tac_toe/home_screen.dart';
 
 void main() => runApp(
   DevicePreview(
