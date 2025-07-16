@@ -20,7 +20,7 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 100),
       vsync: this,
     );
 
@@ -66,8 +66,8 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
   //-------------------
   String activePlayer = 'X';
   bool gameOver = false;
-  int turn = 0;
-  String result = "xxxxxxresultxxxxxx";
+  int turns = 0;
+  String result = "";
   Game game = Game();
   bool isSwitched = false;
 
@@ -143,6 +143,10 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
                           decoration: BoxDecoration(
                             color: _isForbidden
                                 ? _colorAnimation.value
+                                : gameOver && activePlayer == "X"
+                                ? Colors.redAccent.withOpacity(0.7)
+                                : gameOver && activePlayer == "O" && turns != 9
+                                ? Colors.blueAccent.withOpacity(0.7)
                                 : const Color.fromARGB(255, 34, 40, 95),
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -181,7 +185,7 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
                   Player.playerO = [];
                   activePlayer = 'X';
                   gameOver = false;
-                  turn = 0;
+                  turns = 0;
                   result = "";
                 });
               },
@@ -199,6 +203,12 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
         (Player.playerO.isEmpty || !Player.playerO.contains(index))) {
       game.playGame(index, activePlayer);
       _updateState();
+
+      if (isSwitched && !gameOver) {
+        await Future.delayed(Duration(milliseconds: 1200));
+        game.autoPlay(activePlayer);
+        _updateState();
+      }
     } else {
       _triggerForbiddenAction();
     }
@@ -206,7 +216,17 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
 
   void _updateState() {
     setState(() {
+      turns++;
+      String winnerPlayer = game.checkWinner();
       activePlayer = (activePlayer == "X") ? "O" : "X";
+
+      if (winnerPlayer != "") {
+        result = "The winner player is $winnerPlayer";
+        gameOver = true;
+      } else if (!gameOver && turns == 9) {
+        result = "It's a draw";
+        gameOver = true;
+      }
     });
   }
 }
