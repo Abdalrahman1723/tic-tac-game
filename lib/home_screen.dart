@@ -65,6 +65,7 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
 
   //-------------------
   String activePlayer = 'X';
+  String winnerPlayer = '';
   bool gameOver = false;
   int turns = 0;
   String result = "";
@@ -145,9 +146,9 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
                           decoration: BoxDecoration(
                             color: _isForbidden
                                 ? _colorAnimation.value
-                                : gameOver && activePlayer == "X"
+                                : gameOver && winnerPlayer == "O"
                                 ? Colors.redAccent.withOpacity(0.7)
-                                : gameOver && activePlayer == "O" && turns != 9
+                                : gameOver && winnerPlayer == "X"
                                 ? Colors.blueAccent.withOpacity(0.7)
                                 : const Color.fromARGB(255, 34, 40, 95),
                             borderRadius: BorderRadius.circular(16),
@@ -220,7 +221,7 @@ class _State extends State<HomeScreen> with SingleTickerProviderStateMixin {
   void _updateState() {
     setState(() {
       turns++;
-      String winnerPlayer = game.checkWinner();
+      winnerPlayer = game.checkWinner();
       activePlayer = (activePlayer == "X") ? "O" : "X";
 
       if (winnerPlayer != "") {
